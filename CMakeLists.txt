@@ -6,18 +6,18 @@ project(VulkanPBRT
     LANGUAGES CXX
 )
 
-find_package(Vulkan REQUIRED)
-find_package(Threads REQUIRED)
-find_package(PkgConfig)
-pkg_check_modules(xcb REQUIRED IMPORTED_TARGET xcb)
-include(CMakeFindDependencyMacro)
-set(vsg_glslang_DIR ${CMAKE_SOURCE_DIR}/vsg)
-find_dependency(vsg_glslang)
+# find the vsg
+if (VULKAN_SDK)
+    set(ENV{VULKAN_SDK} ${VULKAN_SDK})
+endif()
 
-add_subdirectory(vsg)
-set(IMGUI_HEADER
-    vsg/src/imgui/)
-include_directories(vsg/include ${glslang_INCLUDE_DIRS} ${IMGUI_HEADER})
+find_package(vsg REQUIRED)
+find_package(vsgXchange REQUIRED)
+find_package(vsgImGui REQUIRED)
+
+# set the use of C++17 globally as all examples require it
+set(CMAKE_CXX_STANDARD 17)
+
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -35,7 +35,7 @@ set(SHADERS
 
 add_executable(VulkanPBRT ${SOURCES} ${VSG_ALL})
 
-target_link_libraries(VulkanPBRT Vulkan::Vulkan glslang::glslang Threads::Threads xcb assimp)
+target_link_libraries(VulkanPBRT vsg::vsg vsgXchange::vsgXchange vsgImGui::vsgImGui)
 
 ## compilaiton of shader files
 function(add_shader TARGET SHADER)

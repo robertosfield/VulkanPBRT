@@ -2,7 +2,6 @@
 
 #include <vsgImGui/RenderImGui.h>
 #include <vsgImGui/SendEventsToImGui.h>
-#include <imgui.h>
 
 #include <vsg/all.h>
 
